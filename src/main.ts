@@ -292,6 +292,24 @@ export default class ObsidianGit extends Plugin {
             })
         );
 
+        // Fork 修改：空文件夹在 Git 里不会被记录，这里在目录创建/清空后
+        // 自动放入 .gitkeep，并在目录有内容后移除它。
+        this.registerEvent(
+            this.app.vault.on("create", (file) => {
+                if (file instanceof TFolder) {
+                    this.scheduleEmptyFolderCheck(file);
+                }
+            })
+        );
+        this.registerEvent(
+            this.app.vault.on("delete", (file) => {
+                const parent = file.parent;
+                if (parent instanceof TFolder) {
+                    this.scheduleEmptyFolderCheck(parent);
+                }
+            })
+        );
+
         this.registerView(SOURCE_CONTROL_VIEW_CONFIG.type, (leaf) => {
             return new GitView(leaf, this);
         });
@@ -516,6 +534,46 @@ export default class ObsidianGit extends Plugin {
         this.intervalsToClear = [];
 
         this.debRefresh.cancel();
+
+        for (const timer of this.emptyFolderTimers.values()) {
+            window.clearTimeout(timer);
+        }
+        this.emptyFolderTimers.clear();
+    }
+
+    private emptyFolderTimers = new Map<string, number>();
+
+    private scheduleEmptyFolderCheck(folder: TFolder): void {
+        if (folder.isRoot()) return;
+        const existing = this.emptyFolderTimers.get(folder.path);
+        if (existing !== undefined) window.clearTimeout(existing);
+        const timer = window.setTimeout(() => {
+            this.emptyFolderTimers.delete(folder.path);
+            void this.keepFolderInGit(folder);
+        }, 1200);
+        this.emptyFolderTimers.set(folder.path, timer);
+    }
+
+    private async keepFolderInGit(folder: TFolder): Promise<void> {
+        const placeholder = `${folder.path}/.gitkeep`;
+        try {
+            const otherChildren = folder.children.filter(
+                (child) => child.name !== ".gitkeep"
+            );
+            if (otherChildren.length > 0) {
+                const existing =
+                    this.app.vault.getAbstractFileByPath(placeholder);
+                if (existing instanceof TFile) {
+                    await this.app.vault.delete(existing);
+                }
+                return;
+            }
+            if (!(await this.app.vault.adapter.exists(placeholder))) {
+                await this.app.vault.create(placeholder, "");
+            }
+        } catch (e) {
+            console.error("obsidian-git: failed to keep empty folder", e);
+        }
     }
 
     onunload() {

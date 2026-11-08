@@ -11,6 +11,7 @@ import {
     ASK_PASS_SCRIPT_FILE,
     DEFAULT_WIN_GIT_PATH,
     GIT_LINE_AUTHORING_MOVEMENT_DETECTION_MINIMAL_LENGTH,
+    WINDOWS_GIT_CANDIDATES,
 } from "src/constants";
 import type { LineAuthorFollowMovement } from "src/editor/lineAuthor/model";
 import type {
@@ -41,6 +42,7 @@ export class SimpleGit extends GitManager {
     private askpassServer: AskpassServer | undefined;
     private unloaded = false;
     useDefaultWindowsGitPath: boolean = false;
+    private defaultWindowsGitPath: string = DEFAULT_WIN_GIT_PATH;
     constructor(plugin: ObsidianGit) {
         super(plugin);
     }
@@ -98,7 +100,7 @@ export class SimpleGit extends GitManager {
                 binary:
                     this.plugin.localStorage.getGitPath() ||
                     (this.useDefaultWindowsGitPath
-                        ? DEFAULT_WIN_GIT_PATH
+                        ? this.defaultWindowsGitPath
                         : undefined),
                 config: ["core.quotepath=off"],
                 // Preserve the inherited and user-configured environment
@@ -1649,28 +1651,29 @@ export class SimpleGit extends GitManager {
         const gitPath = this.plugin.localStorage.getGitPath();
         const command = await spawnAsync(gitPath || "git", ["--version"], {});
 
-        if (command.error) {
-            if (Platform.isWin && !gitPath) {
-                this.plugin.log(
-                    `Git not found in PATH. Checking standard installation path(${DEFAULT_WIN_GIT_PATH}) of Git for Windows.`
-                );
-                const command = await spawnAsync(DEFAULT_WIN_GIT_PATH, [
-                    "--version",
-                ]);
-                if (command.error) {
-                    console.error(command.error);
-                    return false;
-                } else {
-                    this.useDefaultWindowsGitPath = true;
-                }
-            } else {
-                console.error(command.error);
-                return false;
-            }
-        } else {
+        if (!command.error) {
             this.useDefaultWindowsGitPath = false;
+            return true;
         }
-        return true;
+
+        if (Platform.isWin && !gitPath) {
+            // Fork 修改：PATH 里没有 git 时，依次尝试常见安装位置，
+            // 而不是像上游那样只试一个写死的路径。
+            for (const candidate of WINDOWS_GIT_CANDIDATES) {
+                this.plugin.log(
+                    `Git not found in PATH. Trying '${candidate}'.`
+                );
+                const result = await spawnAsync(candidate, ["--version"], {});
+                if (!result.error) {
+                    this.defaultWindowsGitPath = candidate;
+                    this.useDefaultWindowsGitPath = true;
+                    return true;
+                }
+            }
+        }
+
+        console.error(command.error);
+        return false;
     }
 
     private convertErrors(error: unknown): never {
