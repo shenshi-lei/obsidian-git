@@ -31,6 +31,19 @@ ${log.body ? "\n" + log.body : ""}`);
     let isCollapsed = $state(true);
     let closed = $state<Record<string, boolean>>({});
 
+    /** 每个提交里 新增 / 修改 / 删除 的文件数量 */
+    let counts = $derived.by(() => {
+        let added = 0;
+        let modified = 0;
+        let deleted = 0;
+        for (const file of log.diff.files) {
+            if (file.status === "A") added++;
+            else if (file.status === "D") deleted++;
+            else modified++;
+        }
+        return { added, modified, deleted };
+    });
+
     function authorToString(log: LogEntry) {
         const name = log.author.name;
         if (plugin.settings.authorInHistoryView == "full") {
@@ -99,6 +112,25 @@ ${log.body ? "\n" + log.body : ""}`);
                 <div class="tree-item-inner nav-folder-title-content">
                     {log.message}
                 </div>
+                {#if counts.added || counts.modified || counts.deleted}
+                    <div class="git-stats">
+                        {#if counts.added}
+                            <span class="stat added" title="新增文件"
+                                >+{counts.added}</span
+                            >
+                        {/if}
+                        {#if counts.modified}
+                            <span class="stat modified" title="修改文件"
+                                >~{counts.modified}</span
+                            >
+                        {/if}
+                        {#if counts.deleted}
+                            <span class="stat deleted" title="删除文件"
+                                >−{counts.deleted}</span
+                            >
+                        {/if}
+                    </div>
+                {/if}
             </div>
         </div>
         {#if !isCollapsed}

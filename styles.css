@@ -128,6 +128,28 @@
     color: var(--color-yellow);
 }
 
+/* 历史视图：每个提交下方显示 新增/修改/删除 文件数 */
+.git-stats {
+    display: flex;
+    gap: 6px;
+    margin-top: 2px;
+    font-size: 0.8em;
+    font-variant-numeric: tabular-nums;
+}
+.git-stats .stat {
+    padding: 0 4px;
+    border-radius: var(--radius-s);
+}
+.git-stats .stat.added {
+    color: var(--color-green);
+}
+.git-stats .stat.modified {
+    color: var(--color-blue);
+}
+.git-stats .stat.deleted {
+    color: var(--color-red);
+}
+
 /* 历史视图：按状态给文件行左侧加一条色条（不占位，用 inset 阴影） */
 .workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="A"] {
     box-shadow: inset 3px 0 0 var(--color-green);
