@@ -55,6 +55,7 @@
         else open(event);
     }}
     class="tree-item nav-file"
+    data-status={change.workingDir}
 >
     <div
         class="tree-item-self is-clickable nav-file-title"

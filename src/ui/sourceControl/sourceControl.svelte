@@ -75,6 +75,9 @@
     let changedStats = $derived(
         countStatuses(status?.changed ?? [], (file) => file.workingDir)
     );
+    let pulledStats = $derived(
+        countStatuses(lastPulledFiles, (file) => file.workingDir)
+    );
 
     /** 统计 A/M/D 文件数量，未跟踪（?）算作新增 */
     function countStatuses(
@@ -958,6 +961,24 @@
                                 class="tree-item-inner nav-folder-title-content"
                             >
                                 Recently Pulled Files
+                            </div>
+
+                            <div class="git-stats">
+                                {#if pulledStats.added}
+                                    <span class="stat added"
+                                        >+{pulledStats.added}</span
+                                    >
+                                {/if}
+                                {#if pulledStats.modified}
+                                    <span class="stat modified"
+                                        >~{pulledStats.modified}</span
+                                    >
+                                {/if}
+                                {#if pulledStats.deleted}
+                                    <span class="stat deleted"
+                                        >−{pulledStats.deleted}</span
+                                    >
+                                {/if}
                             </div>
 
                             <span class="tree-item-flair"

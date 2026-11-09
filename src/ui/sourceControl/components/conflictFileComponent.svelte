@@ -49,7 +49,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_unknown_aria_attribute -->
 <!-- svelte-ignore a11y_mouse_events_have_key_events -->
-<main onclick={open} class="tree-item nav-file">
+<main onclick={open} class="tree-item nav-file" data-status="U">
     <div
         class="tree-item-self is-clickable nav-file-title"
         data-path={vaultPath}

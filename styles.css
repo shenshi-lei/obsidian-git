@@ -226,6 +226,22 @@
     .nav-file-title-content {
     color: var(--color-yellow);
 }
+
+/* 冲突文件（U）：橙色 */
+.workspace-leaf-content[data-type="git-view"] .nav-file[data-status="U"] {
+    box-shadow: inset 3px 0 0 var(--color-orange);
+}
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="U"]
+    .nav-file-title-content {
+    color: var(--color-orange);
+}
+
+/* Recently Pulled Files 标题上的统计 */
+.pulled .git-stats {
+    margin-top: 0;
+    margin-right: 6px;
+}
 .git-tools .buttons {
     display: flex;
 }
