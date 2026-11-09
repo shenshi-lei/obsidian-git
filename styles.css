@@ -115,11 +115,31 @@
     width: 11px;
 }
 
+.git-tools .type[data-type="A"] {
+    color: var(--color-green);
+}
 .git-tools .type[data-type="M"] {
-    color: orange;
+    color: var(--color-blue);
 }
 .git-tools .type[data-type="D"] {
-    color: red;
+    color: var(--color-red);
+}
+.git-tools .type[data-type="R"] {
+    color: var(--color-yellow);
+}
+
+/* 历史视图：按状态给文件行左侧加一条色条（不占位，用 inset 阴影） */
+.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="A"] {
+    box-shadow: inset 3px 0 0 var(--color-green);
+}
+.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="M"] {
+    box-shadow: inset 3px 0 0 var(--color-blue);
+}
+.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="D"] {
+    box-shadow: inset 3px 0 0 var(--color-red);
+}
+.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="R"] {
+    box-shadow: inset 3px 0 0 var(--color-yellow);
 }
 .git-tools .buttons {
     display: flex;

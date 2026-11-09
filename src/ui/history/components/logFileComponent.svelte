@@ -81,6 +81,7 @@
         else mainClick(event);
     }}
     class="tree-item nav-file"
+    data-status={diff.status}
 >
     <div
         class="tree-item-self is-clickable nav-file-title"
