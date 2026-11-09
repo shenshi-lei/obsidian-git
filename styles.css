@@ -163,6 +163,26 @@
 .workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="R"] {
     box-shadow: inset 3px 0 0 var(--color-yellow);
 }
+
+/* 源代码管理视图：同样按状态给文件行加色条 */
+.workspace-leaf-content[data-type="git-view"] .nav-file[data-status="A"] {
+    box-shadow: inset 3px 0 0 var(--color-green);
+}
+.workspace-leaf-content[data-type="git-view"] .nav-file[data-status="M"] {
+    box-shadow: inset 3px 0 0 var(--color-blue);
+}
+.workspace-leaf-content[data-type="git-view"] .nav-file[data-status="D"] {
+    box-shadow: inset 3px 0 0 var(--color-red);
+}
+.workspace-leaf-content[data-type="git-view"] .nav-file[data-status="R"] {
+    box-shadow: inset 3px 0 0 var(--color-yellow);
+}
+
+/* 分组标题上的统计，和文件数并排 */
+.git-tools .git-stats {
+    margin-top: 0;
+    margin-right: 6px;
+}
 .git-tools .buttons {
     display: flex;
 }

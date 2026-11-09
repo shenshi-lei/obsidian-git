@@ -68,6 +68,30 @@
             0
     );
     let hasChanges = $derived(stagedCount + changedCount > 0);
+
+    let stagedStats = $derived(
+        countStatuses(status?.staged ?? [], (file) => file.index)
+    );
+    let changedStats = $derived(
+        countStatuses(status?.changed ?? [], (file) => file.workingDir)
+    );
+
+    /** 统计 A/M/D 文件数量，未跟踪（?）算作新增 */
+    function countStatuses(
+        files: FileStatusResult[],
+        getStatus: (file: FileStatusResult) => string
+    ) {
+        let added = 0;
+        let modified = 0;
+        let deleted = 0;
+        for (const file of files) {
+            const raw = (getStatus(file) ?? "").trim();
+            if (raw === "A" || raw === "?") added++;
+            else if (raw === "D") deleted++;
+            else modified++;
+        }
+        return { added, modified, deleted };
+    }
     let commitDisabled = $derived(!canCommit("smart"));
     let commitAndSyncDisabled = $derived(!canCommitAndSync("all"));
 
@@ -691,6 +715,23 @@
                                     >
                                 </div>
                             </div>
+                            <div class="git-stats">
+                                {#if stagedStats.added}
+                                    <span class="stat added"
+                                        >+{stagedStats.added}</span
+                                    >
+                                {/if}
+                                {#if stagedStats.modified}
+                                    <span class="stat modified"
+                                        >~{stagedStats.modified}</span
+                                    >
+                                {/if}
+                                {#if stagedStats.deleted}
+                                    <span class="stat deleted"
+                                        >−{stagedStats.deleted}</span
+                                    >
+                                {/if}
+                            </div>
                             <div class="files-count">
                                 {status.staged.length}
                             </div>
@@ -839,6 +880,23 @@
                                         /></svg
                                     >
                                 </div>
+                            </div>
+                            <div class="git-stats">
+                                {#if changedStats.added}
+                                    <span class="stat added"
+                                        >+{changedStats.added}</span
+                                    >
+                                {/if}
+                                {#if changedStats.modified}
+                                    <span class="stat modified"
+                                        >~{changedStats.modified}</span
+                                    >
+                                {/if}
+                                {#if changedStats.deleted}
+                                    <span class="stat deleted"
+                                        >−{changedStats.deleted}</span
+                                    >
+                                {/if}
                             </div>
                             <div class="files-count">
                                 {status.changed.length}
