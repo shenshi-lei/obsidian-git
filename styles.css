@@ -183,6 +183,49 @@
     margin-top: 0;
     margin-right: 6px;
 }
+
+/* ---- 文件名本身按状态着色（提交记录 + 源代码管理） ---- */
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="A"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="A"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="?"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="?"]
+    .nav-file-title-content {
+    color: var(--color-green);
+}
+
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="M"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="M"]
+    .nav-file-title-content {
+    color: var(--color-blue);
+}
+
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="D"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="D"]
+    .nav-file-title-content {
+    color: var(--color-red);
+}
+
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="R"]
+    .nav-file-title-content,
+.workspace-leaf-content[data-type="git-view"]
+    .nav-file[data-status="R"]
+    .nav-file-title-content {
+    color: var(--color-yellow);
+}
 .git-tools .buttons {
     display: flex;
 }
