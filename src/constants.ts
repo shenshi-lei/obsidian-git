@@ -103,23 +103,6 @@ export const DIFF_VIEW_CONFIG = {
     icon: "git-pull-request",
 };
 
-export const DEFAULT_WIN_GIT_PATH = "C:\\Program Files\\Git\\cmd\\git.exe";
-
-/**
- * Fork 修改：Windows 下在 PATH 中找不到 git 时，按顺序尝试这些候选路径。
- * 可用环境变量 OBSIDIAN_GIT_PATH 指定自己的安装位置。
- */
-export const WINDOWS_GIT_CANDIDATES: string[] = [
-    ...(typeof process !== "undefined" && process.env.OBSIDIAN_GIT_PATH
-        ? [process.env.OBSIDIAN_GIT_PATH]
-        : []),
-    DEFAULT_WIN_GIT_PATH,
-    "C:\\Program Files (x86)\\Git\\cmd\\git.exe",
-    ...(typeof process !== "undefined" && process.env.LOCALAPPDATA
-        ? [`${process.env.LOCALAPPDATA}\\Programs\\Git\\cmd\\git.exe`]
-        : []),
-    "E:\\downloaded\\Git\\cmd\\git.exe",
-];
 export const ASK_PASS_SCRIPT_FILE = "obsidian_askpass.sh";
 
 export const ASK_PASS_SCRIPT = `#!/bin/sh

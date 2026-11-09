@@ -769,7 +769,7 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
                     ),
                     {
                         name: "Custom Git binary path",
-                        desc: "Path to the Git executable for a custom installation.",
+                        desc: "Path to the Git executable for a custom installation. Leave empty to use Git from PATH or the default installation location.",
                         visible: desktop,
                         render: (setting) => {
                             setting.addText((text) =>

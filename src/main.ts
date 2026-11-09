@@ -99,6 +99,9 @@ export default class ObsidianGit extends Plugin {
      */
     private unpushedCommits?: Promise<number>;
 
+    /** Whether the "Git not found" notice was already shown in this session. */
+    private missingGitNoticeShown = false;
+
     setPluginState(state: Partial<PluginState>): void {
         this.state = Object.assign(this.state, state);
         this.statusBar?.display();
@@ -555,25 +558,42 @@ export default class ObsidianGit extends Plugin {
     }
 
     private async keepFolderInGit(folder: TFolder): Promise<void> {
+        if (this.isHiddenPath(folder.path)) return;
         const placeholder = `${folder.path}/.gitkeep`;
         try {
             const otherChildren = folder.children.filter(
                 (child) => child.name !== ".gitkeep"
             );
-            if (otherChildren.length > 0) {
-                const existing =
-                    this.app.vault.getAbstractFileByPath(placeholder);
-                if (existing instanceof TFile) {
-                    await this.app.vault.delete(existing);
-                }
-                return;
-            }
+            // Existing placeholders are never removed, even when the folder
+            // has content again, so a user provided .gitkeep is preserved.
+            if (otherChildren.length > 0) return;
             if (!(await this.app.vault.adapter.exists(placeholder))) {
                 await this.app.vault.create(placeholder, "");
             }
         } catch (e) {
             console.error("obsidian-git: failed to keep empty folder", e);
         }
+    }
+
+    /**
+     * Adds a `.gitkeep` to empty folders that already existed when the plugin
+     * loaded. Without this sweep only folders created or emptied while the
+     * plugin was running would be kept in Git.
+     */
+    private keepEmptyFolders(): void {
+        for (const file of this.app.vault.getAllLoadedFiles()) {
+            if (!(file instanceof TFolder) || file.isRoot()) continue;
+            if (this.isHiddenPath(file.path)) continue;
+            if (file.children.some((child) => child.name !== ".gitkeep")) {
+                continue;
+            }
+            this.scheduleEmptyFolderCheck(file);
+        }
+    }
+
+    /** Config folders like `.obsidian` or `.trash` are left untouched. */
+    private isHiddenPath(path: string): boolean {
+        return path.split("/").some((segment) => segment.startsWith("."));
     }
 
     onunload() {
@@ -616,6 +636,8 @@ export default class ObsidianGit extends Plugin {
             );
         }
 
+        this.keepEmptyFolders();
+
         try {
             if (this.useSimpleGit) {
                 this.gitManager = new SimpleGit(this);
@@ -631,9 +653,7 @@ export default class ObsidianGit extends Plugin {
             const pausedAutomatics = this.localStorage.getPausedAutomatics();
             switch (result) {
                 case "missing-git":
-                    this.displayError(
-                        `Cannot run git command. Trying to run: '${this.localStorage.getGitPath() || "git"}' .`
-                    );
+                    this.notifyMissingGit();
                     break;
                 case "missing-repo":
                     new Notice(
@@ -642,6 +662,7 @@ export default class ObsidianGit extends Plugin {
                     );
                     break;
                 case "valid":
+                    this.missingGitNoticeShown = false;
                     if (
                         Platform.isDesktop &&
                         this.settings.showBranchStatusBar &&
@@ -718,6 +739,29 @@ export default class ObsidianGit extends Plugin {
             this.localStorage.setGitPath(path);
             await this.gitManager.updateGitPath(path || "git");
         });
+    }
+
+    private missingGitMessage(): string {
+        const detail =
+            this.gitManager instanceof SimpleGit
+                ? this.gitManager.describeLastLookup()
+                : "";
+        return [
+            "Git was not found.",
+            detail,
+            "Install Git (https://git-scm.com/downloads) or set the executable under Settings → Git → Advanced → 'Custom Git binary path'.",
+        ]
+            .filter((part) => part.length > 0)
+            .join(" ");
+    }
+
+    private notifyMissingGit(): void {
+        const message = this.missingGitMessage();
+        this.log(message);
+        this.statusBar?.displayMessage("git not found", 10000);
+        if (this.missingGitNoticeShown) return;
+        this.missingGitNoticeShown = true;
+        new Notice(message, 20000);
     }
 
     async reloadGitManager(): Promise<GitActionResult<void>> {

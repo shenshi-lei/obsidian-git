@@ -9,9 +9,7 @@ import { simpleGit, GitError, CleanOptions } from "simple-git";
 import {
     ASK_PASS_SCRIPT,
     ASK_PASS_SCRIPT_FILE,
-    DEFAULT_WIN_GIT_PATH,
     GIT_LINE_AUTHORING_MOVEMENT_DETECTION_MINIMAL_LENGTH,
-    WINDOWS_GIT_CANDIDATES,
 } from "src/constants";
 import type { LineAuthorFollowMovement } from "src/editor/lineAuthor/model";
 import type {
@@ -32,7 +30,12 @@ import type {
     Status,
 } from "../types";
 import { GitConflictError, GitOperation, NoNetworkError } from "../types";
-import { impossibleBranch, spawnAsync, splitRemoteBranch } from "../utils";
+import {
+    describeGitLookup,
+    findGitBinary,
+    type GitLookupResult,
+} from "../gitPathDiscovery";
+import { impossibleBranch, splitRemoteBranch } from "../utils";
 import { AskpassServer } from "./askpassServer";
 import { GitManager } from "./gitManager";
 
@@ -41,8 +44,9 @@ export class SimpleGit extends GitManager {
     absoluteRepoPath!: string;
     private askpassServer: AskpassServer | undefined;
     private unloaded = false;
-    useDefaultWindowsGitPath: boolean = false;
-    private defaultWindowsGitPath: string = DEFAULT_WIN_GIT_PATH;
+    /** Git executable used when it was not found through the default lookup. */
+    private fallbackGitPath: string | undefined;
+    private lastGitLookup: GitLookupResult | undefined;
     constructor(plugin: ObsidianGit) {
         super(plugin);
     }
@@ -99,9 +103,7 @@ export class SimpleGit extends GitManager {
                 baseDir: basePath,
                 binary:
                     this.plugin.localStorage.getGitPath() ||
-                    (this.useDefaultWindowsGitPath
-                        ? this.defaultWindowsGitPath
-                        : undefined),
+                    this.fallbackGitPath,
                 config: ["core.quotepath=off"],
                 // Preserve the inherited and user-configured environment
                 allowEnvironment: [
@@ -1646,34 +1648,40 @@ export class SimpleGit extends GitManager {
         return undefined;
     }
 
+    /**
+     * Looks for a working Git executable. A path configured in the plugin
+     * settings always wins, then `OBSIDIAN_GIT_PATH`, then `git` from PATH and
+     * finally the default installation location of the current platform.
+     */
     private async isGitInstalled(): Promise<boolean> {
-        // https://github.com/steveukx/git-js/issues/402
-        const gitPath = this.plugin.localStorage.getGitPath();
-        const command = await spawnAsync(gitPath || "git", ["--version"], {});
-
-        if (!command.error) {
-            this.useDefaultWindowsGitPath = false;
-            return true;
-        }
-
-        if (Platform.isWin && !gitPath) {
-            // Fork 修改：PATH 里没有 git 时，依次尝试常见安装位置，
-            // 而不是像上游那样只试一个写死的路径。
-            for (const candidate of WINDOWS_GIT_CANDIDATES) {
+        const lookup = await findGitBinary(
+            this.plugin.localStorage.getGitPath()
+        );
+        this.lastGitLookup = lookup;
+        if (!lookup.binary) {
+            // Log every attempt with the error it produced, so the failure is
+            // not reported with the error of an unrelated binary.
+            for (const attempt of lookup.attempts) {
                 this.plugin.log(
-                    `Git not found in PATH. Trying '${candidate}'.`
+                    `Git lookup: '${attempt.binary}' (${attempt.source}) failed: ${attempt.error ?? "unknown error"}`
                 );
-                const result = await spawnAsync(candidate, ["--version"], {});
-                if (!result.error) {
-                    this.defaultWindowsGitPath = candidate;
-                    this.useDefaultWindowsGitPath = true;
-                    return true;
-                }
             }
+            this.fallbackGitPath = undefined;
+            return false;
         }
 
-        console.error(command.error);
-        return false;
+        this.fallbackGitPath =
+            lookup.source === "env" || lookup.source === "default"
+                ? lookup.binary
+                : undefined;
+        return true;
+    }
+
+    /** Summary of the last Git lookup, for user facing notices. */
+    describeLastLookup(): string {
+        return this.lastGitLookup
+            ? describeGitLookup(this.lastGitLookup)
+            : "No Git lookup has been performed yet.";
     }
 
     private convertErrors(error: unknown): never {

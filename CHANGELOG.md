@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.2](https://github.com/shenshi-lei/obsidian-git/compare/2.43.0...2.43.2) (2026-11-09)
+
+### Features
+
+* keep empty folders with `.gitkeep`, including folders that already exist when the plugin loads
+* probe the configured path, `OBSIDIAN_GIT_PATH`, PATH and the platform default Git location
+* show a notice with the tried Git locations and their errors when no Git executable can be found
+
+### Bug Fixes
+
+* never delete an existing `.gitkeep`, even when the folder has content again
+* report the error of every attempted Git binary instead of the error of `git` from PATH
+* respect `OBSIDIAN_GIT_PATH` and the platform default Git location on all desktop platforms
+
 ## [2.43.0](https://github.com/Vinzent03/obsidian-git/compare/2.42.0...2.43.0) (2026-11-05)
 
 ### Features
