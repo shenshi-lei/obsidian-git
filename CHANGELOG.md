@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.5](https://github.com/shenshi-lei/obsidian-git/compare/2.43.4...2.43.5) (2026-11-10)
+
+### Bug Fixes
+
+* show the Git command dialog without an inner scrollbar, sized to its content with padding and group spacing
+
 ## [2.43.4](https://github.com/shenshi-lei/obsidian-git/compare/2.43.3...2.43.4) (2026-11-10)
 
 ### Features

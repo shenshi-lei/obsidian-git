@@ -1063,13 +1063,15 @@ div:hover > .git-gutter-marker.git-changedelete {
 
 /* Git command panel modal */
 .git-commands-modal {
-    width: min(560px, 92vw);
+    width: min(640px, 94vw);
+    padding: 0 var(--size-4-4) var(--size-4-4);
 }
 
 .git-commands-modal-content {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    padding: 2px;
 }
 
 .git-commands-modal-toolbar {
@@ -1084,14 +1086,11 @@ div:hover > .git-gutter-marker.git-changedelete {
 }
 
 .git-commands-list {
-    max-height: 55vh;
-    overflow-y: auto;
-    overscroll-behavior: contain;
     padding-right: 2px;
 }
 
 .git-command-group + .git-command-group {
-    margin-top: 2px;
+    margin-top: 6px;
 }
 
 .git-command-group-header {
