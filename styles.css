@@ -1063,8 +1063,33 @@ div:hover > .git-gutter-marker.git-changedelete {
 
 /* Git command panel modal */
 .git-commands-modal-shell {
-    width: min(640px, 94vw);
+    width: min(680px, 94vw);
+    min-width: 420px;
+    min-height: 280px;
     padding: 0;
+}
+
+.git-commands-modal-shell .modal-title {
+    padding: var(--size-4-4) var(--size-4-4) 0;
+    cursor: move;
+    user-select: none;
+}
+
+.git-commands-resize-handle {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+}
+
+.git-commands-resize-handle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-right: 2px solid var(--background-modifier-border);
+    border-bottom: 2px solid var(--background-modifier-border);
 }
 
 .git-commands-modal {

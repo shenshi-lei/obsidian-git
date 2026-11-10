@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-    COMMAND_GROUPS,
-    getDefaultCollapsedGroups,
     getVisibleGroups,
     isActionAvailable,
     unavailableReason,
@@ -25,18 +23,6 @@ function actionIds(query: string, ctx = context()): string[] {
         actions.map((action) => action.id)
     );
 }
-
-describe("getDefaultCollapsedGroups", () => {
-    it("expands the common groups and collapses the rest", () => {
-        const collapsed = getDefaultCollapsedGroups();
-        expect(collapsed.sync).toBeUndefined();
-        expect(collapsed.commit).toBeUndefined();
-        for (const group of COMMAND_GROUPS) {
-            if (group.common) continue;
-            expect(collapsed[group.id]).toBe(true);
-        }
-    });
-});
 
 describe("getVisibleGroups", () => {
     it("returns all groups when everything is available", () => {

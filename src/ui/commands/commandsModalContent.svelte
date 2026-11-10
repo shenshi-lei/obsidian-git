@@ -3,7 +3,6 @@
     import { onMount } from "svelte";
     import type ObsidianGit from "src/main";
     import {
-        getDefaultCollapsedGroups,
         getVisibleGroups,
         isActionAvailable,
         unavailableReason,
@@ -21,7 +20,7 @@
 
     let searchEl: HTMLInputElement | undefined = $state();
     let query: string = $state("");
-    let collapsed: Record<string, boolean> = $state(readCollapsedGroups());
+    let collapsed: Record<string, boolean> = $state({});
     let gitReady: boolean = $state(false);
     let repositoryMissing: boolean = $state(false);
     let hasActiveEditor: boolean = $state(hasEditor());
@@ -52,30 +51,6 @@
         return plugin.app.workspace.activeEditor?.editor != undefined;
     }
 
-    function collapsedStorageKey(): string {
-        return `${plugin.manifest.id}:commands-modal-collapsed-groups`;
-    }
-
-    function readCollapsedGroups(): Record<string, boolean> {
-        const raw = plugin.app.loadLocalStorage(collapsedStorageKey()) as
-            string | null;
-        if (typeof raw === "string" && raw.length > 0) {
-            try {
-                return JSON.parse(raw) as Record<string, boolean>;
-            } catch {
-                // Fall through to the defaults.
-            }
-        }
-        return getDefaultCollapsedGroups();
-    }
-
-    function saveCollapsedGroups(): void {
-        plugin.app.saveLocalStorage(
-            collapsedStorageKey(),
-            JSON.stringify(collapsed)
-        );
-    }
-
     function isGroupOpen(group: GitCommandGroup): boolean {
         if (query.trim().length > 0) return true;
         return collapsed[group.id] !== true;
@@ -84,7 +59,6 @@
     function toggleGroup(group: GitCommandGroup): void {
         if (query.trim().length > 0) return;
         collapsed = { ...collapsed, [group.id]: !collapsed[group.id] };
-        saveCollapsedGroups();
     }
 
     function toggleAllGroups(): void {
@@ -94,7 +68,6 @@
             next[group.id] = shouldCollapse;
         }
         collapsed = next;
-        saveCollapsedGroups();
     }
 
     function run(action: GitCommandAction): void {

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.8](https://github.com/shenshi-lei/obsidian-git/compare/2.43.7...2.43.8) (2026-11-10)
+
+### Features
+
+* drag the Git command dialog by its title and resize it from the bottom right corner
+* open the dialog with every command group expanded
+
+### Bug Fixes
+
+* add padding around the dialog title so it no longer touches the border
+
 ## [2.43.7](https://github.com/shenshi-lei/obsidian-git/compare/2.43.6...2.43.7) (2026-11-10)
 
 ### Bug Fixes

@@ -413,15 +413,6 @@ export function getVisibleGroups(
     return result;
 }
 
-/** Initial collapsed state: everything except the common groups. */
-export function getDefaultCollapsedGroups(): Record<string, boolean> {
-    const collapsed: Record<string, boolean> = {};
-    for (const group of COMMAND_GROUPS) {
-        if (!group.common) collapsed[group.id] = true;
-    }
-    return collapsed;
-}
-
 /** Small helper so the component does not import Platform directly. */
 export function isDesktopApp(): boolean {
     return Platform.isDesktopApp;
