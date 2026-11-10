@@ -1062,22 +1062,26 @@ div:hover > .git-gutter-marker.git-changedelete {
 }
 
 /* Git command panel modal */
-.git-commands-modal {
+.git-commands-modal-shell {
     width: min(640px, 94vw);
-    padding: 0 var(--size-4-4) var(--size-4-4);
+    padding: 0;
+}
+
+.git-commands-modal {
+    padding: 0;
 }
 
 .git-commands-modal-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 2px;
+    gap: 4px;
 }
 
 .git-commands-modal-toolbar {
     display: flex;
     align-items: center;
     gap: 4px;
+    padding: 0 2px;
 }
 
 .git-commands-search {
@@ -1086,11 +1090,27 @@ div:hover > .git-gutter-marker.git-changedelete {
 }
 
 .git-commands-list {
-    padding-right: 2px;
+    padding-right: 0;
+}
+
+.git-commands-list.is-two-columns {
+    column-count: 2;
+    column-gap: 14px;
+}
+
+.git-commands-list.is-three-columns {
+    column-count: 3;
+    column-gap: 10px;
+}
+
+.git-commands-list.is-two-columns .git-command-group,
+.git-commands-list.is-three-columns .git-command-group {
+    break-inside: avoid;
+    margin-bottom: 4px;
 }
 
 .git-command-group + .git-command-group {
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .git-command-group-header {
@@ -1098,7 +1118,7 @@ div:hover > .git-gutter-marker.git-changedelete {
     align-items: center;
     gap: 4px;
     width: 100%;
-    padding: 2px 4px;
+    padding: 0 4px;
     border: none;
     border-radius: var(--radius-s);
     background: none;
@@ -1147,7 +1167,7 @@ div:hover > .git-gutter-marker.git-changedelete {
     align-items: center;
     gap: 6px;
     width: 100%;
-    padding: 3px 6px;
+    padding: 1px 6px;
     border: none;
     border-radius: var(--radius-s);
     background: none;

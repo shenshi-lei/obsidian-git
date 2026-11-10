@@ -18,6 +18,7 @@ export class CommandsModal extends Modal {
 
     onOpen(): void {
         this.titleEl.setText("Git commands");
+        this.modalEl.addClass("git-commands-modal-shell");
         this.contentEl.addClass("git-commands-modal");
         this.view = mount(CommandsModalContent, {
             target: this.contentEl,

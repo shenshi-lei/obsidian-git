@@ -35,6 +35,14 @@
 
     const groups = $derived(getVisibleGroups(query, availability));
 
+    const openGroupCount = $derived(
+        groups.filter(({ group }) => isGroupOpen(group)).length
+    );
+
+    const columnCount = $derived(
+        openGroupCount <= 2 ? 1 : openGroupCount <= 5 ? 2 : 3
+    );
+
     const allCollapsed = $derived(
         groups.length > 0 &&
             groups.every(({ group }) => collapsed[group.id] === true)
@@ -172,7 +180,11 @@
         </button>
     </div>
 
-    <div class="git-commands-list">
+    <div
+        class="git-commands-list"
+        class:is-two-columns={columnCount === 2}
+        class:is-three-columns={columnCount === 3}
+    >
         {#each groups as { group, actions } (group.id)}
             {@const open = isGroupOpen(group)}
             <div class="git-command-group">
