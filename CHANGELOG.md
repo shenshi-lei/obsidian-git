@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.9](https://github.com/shenshi-lei/obsidian-git/compare/2.43.8...2.43.9) (2026-11-10)
+
+### Features
+
+* resize the Git command dialog from all four edges and corners
+* keep the aspect ratio while resizing from a corner
+
 ## [2.43.8](https://github.com/shenshi-lei/obsidian-git/compare/2.43.7...2.43.8) (2026-11-10)
 
 ### Features
