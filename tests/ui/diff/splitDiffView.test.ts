@@ -190,3 +190,34 @@ describe("SplitDiffView", () => {
         expect(gitShow).toHaveBeenCalledTimes(3);
     });
 });
+
+describe("SplitDiffView snapshot comparison", () => {
+    function createView(): SplitDiffView {
+        return Object.assign(Object.create(SplitDiffView.prototype), {
+            state: {
+                aFile: "note.md",
+                bFile: "notes/note.md",
+                aRef: "",
+                compareSnapshotId: "snapshot-1",
+            },
+            plugin: {
+                settings: { diffGutterStyle: "idea" },
+                gitManager: {},
+            },
+        }) as SplitDiffView;
+    }
+
+    it("titles the view as a comparison since opening", () => {
+        expect(createView().getDisplayText()).toContain("(since opened)");
+    });
+
+    it("is read-only and never treated as the working tree", async () => {
+        const view = createView();
+        await expect(view.bShouldBeEditable()).resolves.toBe(false);
+        expect(view.isWorkingTreeBFile("notes/note.md")).toBe(false);
+    });
+
+    it("skips the git refresh for snapshot comparisons", async () => {
+        await expect(createView().updateRefEditors()).resolves.toBeUndefined();
+    });
+});

@@ -314,6 +314,30 @@ export const GIT_COMMAND_ACTIONS: GitCommandAction[] = [
         group: "editor",
         editorOnly: true,
     },
+    {
+        id: "toggle-local-changes",
+        label: "Toggle local change markers",
+        description: "Show or hide changes made since the note was opened.",
+        icon: "git-compare",
+        group: "editor",
+        editorOnly: true,
+    },
+    {
+        id: "mark-local-changes-reviewed",
+        label: "Mark local changes as reviewed",
+        description: "Reset the change baseline of the active note.",
+        icon: "check-circle",
+        group: "editor",
+        editorOnly: true,
+    },
+    {
+        id: "compare-with-opening-baseline",
+        label: "Compare with note when opened",
+        description: "Open a diff between the note when it was opened and now.",
+        icon: "git-compare",
+        group: "editor",
+        editorOnly: true,
+    },
 
     // Automatics
     {

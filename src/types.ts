@@ -104,6 +104,12 @@ export interface ObsidianGitSettings {
      */
     diffGutterStyle: "idea" | "github";
     /**
+     * Show IntelliJ style gutter markers and line backgrounds for edits made
+     * since the note was opened in this session. Auto commits do not clear
+     * them.
+     */
+    showLocalChanges: boolean;
+    /**
      * Time in milliseconds available to compute an editable split diff.
      * Read-only split diffs use ten times this value.
      */
@@ -517,6 +523,12 @@ export type DiffViewState = {
      * `undefined` stands for the working tree version.
      */
     bRef?: string;
+
+    /**
+     * When set, both sides are read from a transient in-memory snapshot
+     * instead of git refs. Used to compare a note with its opening baseline.
+     */
+    compareSnapshotId?: string;
 };
 
 export type ReadOnlyFileViewState = {

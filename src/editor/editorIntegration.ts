@@ -2,6 +2,7 @@ import type ObsidianGit from "src/main";
 import type { Extension } from "@codemirror/state";
 import { LineAuthoringFeature } from "./lineAuthor/lineAuthorIntegration";
 import { SignsFeature } from "./signs/signsIntegration";
+import { LocalChangesFeature } from "./localChanges/integration";
 import { conflictExtensions, conflictResolutionMode } from "./conflicts/view";
 import { subscribeNewEditor } from "./control";
 import { eventsPerFilePathSingleton } from "./eventsPerFilepath";
@@ -15,10 +16,14 @@ export class EditorIntegration {
         this.plg
     );
     signsFeature: SignsFeature = new SignsFeature(this.plg);
+    localChangesFeature: LocalChangesFeature = new LocalChangesFeature(
+        this.plg
+    );
 
     onUnloadPlugin() {
         this.lineAuthoringFeature.deactivateFeature();
         this.signsFeature.deactivateFeature();
+        this.localChangesFeature.onUnloadPlugin();
         eventsPerFilePathSingleton.clear();
     }
 
@@ -29,11 +34,13 @@ export class EditorIntegration {
         this.plg.registerEditorExtension(this.conflictEditorExtensions);
         this.lineAuthoringFeature.onLoadPlugin();
         this.signsFeature.onLoadPlugin();
+        this.localChangesFeature.onLoadPlugin();
     }
 
     onReady() {
         this.lineAuthoringFeature.conditionallyActivateBySettings();
         this.signsFeature.conditionallyActivateBySettings();
+        this.localChangesFeature.conditionallyActivateBySettings();
     }
 
     activateLineAuthoring() {
@@ -41,6 +48,10 @@ export class EditorIntegration {
     }
     deactiveLineAuthoring() {
         this.lineAuthoringFeature.deactivateFeature();
+    }
+
+    refreshLocalChanges() {
+        this.localChangesFeature.refresh();
     }
 
     refreshSignsSettings() {

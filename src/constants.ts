@@ -50,6 +50,7 @@ export const DEFAULT_SETTINGS: ObsidianGitSettings = {
     dateInHistoryView: false,
     diffStyle: "split",
     diffGutterStyle: "idea",
+    showLocalChanges: true,
     diffTimeout: 50,
     autoStageOnEmptyIndex: true,
     hunks: {

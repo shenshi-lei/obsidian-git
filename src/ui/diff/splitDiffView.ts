@@ -21,6 +21,7 @@ import { Hunks } from "src/editor/signs/hunks";
 import { rawHunkFromChunk, rawHunksToHunks } from "src/editor/signs/diff";
 import { diffContextMenu } from "src/ui/diff/contextMenu";
 import { diffGutter, type DiffSide } from "src/ui/diff/diffGutter";
+import { getSnapshotDiff } from "src/ui/diff/snapshotRegistry";
 
 const readOnlyEditorTheme = EditorView.theme({
     "& .cm-content": { caretColor: "transparent !important" },
@@ -144,6 +145,7 @@ export default class SplitDiffView extends ItemView {
         if (
             this.state?.bFile == undefined ||
             this.state.bRef != undefined ||
+            this.state.compareSnapshotId ||
             !this.plugin.gitManager
         ) {
             return false;
@@ -160,10 +162,13 @@ export default class SplitDiffView extends ItemView {
 
     getDisplayText(): string {
         if (this.state?.bFile != null) {
-            let fileName = this.state.bFile.split("/").last();
+            const parts = this.state.bFile.split("/");
+            let fileName: string | undefined = parts[parts.length - 1];
             if (fileName?.endsWith(".md")) fileName = fileName.slice(0, -3);
             let suffix: string;
-            if (this.state.bRef == undefined) {
+            if (this.state.compareSnapshotId) {
+                suffix = " (since opened)";
+            } else if (this.state.bRef == undefined) {
                 suffix = " (Working Tree)";
             } else if (this.state.bRef == "") {
                 suffix = " (Index)";
@@ -261,6 +266,9 @@ export default class SplitDiffView extends ItemView {
     }
 
     async bShouldBeEditable(): Promise<boolean> {
+        if (this.state.compareSnapshotId) {
+            return false;
+        }
         if (this.state.bRef != undefined) {
             return false;
         }
@@ -303,6 +311,9 @@ export default class SplitDiffView extends ItemView {
      * So only the non editable editors.
      */
     async updateRefEditors() {
+        if (this.state.compareSnapshotId) {
+            return;
+        }
         if (!this.mergeView || this.refreshing) return;
         const aEditor = this.mergeView.a;
         const bEditor = this.mergeView.b;
@@ -437,7 +448,7 @@ export default class SplitDiffView extends ItemView {
             this.state?.aFile &&
             this.state?.bFile &&
             !this.refreshing &&
-            this.plugin.gitManager
+            (this.plugin.gitManager || this.state.compareSnapshotId)
         ) {
             this.refreshing = true;
             try {
@@ -462,26 +473,39 @@ export default class SplitDiffView extends ItemView {
                 this.bIsEditable = await this.bShouldBeEditable();
                 this.indexUnmerged = false;
 
-                const aText = await this.gitShow(
-                    this.state.aRef,
-                    this.state.aFile
-                );
-
+                let aText: string;
                 let bText: string;
-                if (this.state.bRef != undefined) {
-                    bText = await this.gitShow(
-                        this.state.bRef,
-                        this.state.bFile
-                    );
+                const snapshot = getSnapshotDiff(this.state.compareSnapshotId);
+                if (this.state.compareSnapshotId) {
+                    if (!snapshot) {
+                        this.plugin.displayError(
+                            "The baseline of this note is no longer available. The plugin was probably reloaded; reopen the note to capture a new baseline."
+                        );
+                    }
+                    aText = snapshot?.aText ?? "";
+                    bText = snapshot?.bText ?? "";
                 } else {
-                    const bVaultPath =
-                        this.plugin.gitManager.getRelativeVaultPath(
+                    aText = await this.gitShow(
+                        this.state.aRef,
+                        this.state.aFile
+                    );
+
+                    if (this.state.bRef != undefined) {
+                        bText = await this.gitShow(
+                            this.state.bRef,
                             this.state.bFile
                         );
-                    if (await this.app.vault.adapter.exists(bVaultPath)) {
-                        bText = await this.app.vault.adapter.read(bVaultPath);
                     } else {
-                        bText = "";
+                        const bVaultPath =
+                            this.plugin.gitManager.getRelativeVaultPath(
+                                this.state.bFile
+                            );
+                        if (await this.app.vault.adapter.exists(bVaultPath)) {
+                            bText =
+                                await this.app.vault.adapter.read(bVaultPath);
+                        } else {
+                            bText = "";
+                        }
                     }
                 }
 
@@ -545,6 +569,7 @@ export default class SplitDiffView extends ItemView {
                 ]);
 
                 const showButtons =
+                    this.state.compareSnapshotId === undefined &&
                     this.plugin.gitManager instanceof SimpleGit &&
                     !this.indexUnmerged &&
                     (this.state.bRef === undefined || this.state.bRef === "");

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>obsidian-git · 笔记编辑页的 IDEA 风格修改提示</title>
+        <link rel="stylesheet" href="../styles.css" />
+        <link rel="stylesheet" href="editor.css" />
+    </head>
+    <body>
+        <div class="demo-page">
+            <header>
+                <h1>笔记编辑页：打开笔记后的修改提示（原型）</h1>
+                <p>
+                    基准是打开笔记时的内容快照，与 git 暂存区无关，所以自动提交不会把标记清掉。
+                    新增行绿色、修改行蓝色、删除位置灰色小箭头；颜色跟随“Diff line colors”设置。
+                </p>
+            </header>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="badge">IDEA 配色</span>
+                    <h2>编辑器左侧 gutter + 行底色</h2>
+                    <p>新增 = 绿 · 修改 = 蓝 · 删除 = 灰</p>
+                </div>
+                <div id="idea" class="demo-editor"></div>
+            </section>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="badge">GitHub 配色</span>
+                    <h2>同一份修改，红色版本</h2>
+                    <p>新增 = 绿 · 修改 = 红 · 删除 = 红</p>
+                </div>
+                <div id="github" class="demo-editor"></div>
+            </section>
+        </div>
+        <script src="editor.js"></script>
+    </body>
+</html>

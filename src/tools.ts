@@ -8,6 +8,7 @@ import type ObsidianGit from "./main";
 import { SimpleGit } from "./gitManager/simpleGit";
 import { getNewLeaf, splitRemoteBranch } from "./utils";
 import { GeneralModal } from "./ui/modals/generalModal";
+import { registerSnapshotDiff } from "./ui/diff/snapshotRegistry";
 import type { DiffViewState, ReadOnlyFileViewState } from "./types";
 
 export default class Tools {
@@ -113,6 +114,35 @@ export default class Tools {
                 state: state,
             });
         }
+    }
+
+    /**
+     * Open a read-only split diff between two in-memory texts, for example a
+     * note and the baseline captured when it was opened.
+     */
+    openSnapshotDiff({
+        aText,
+        bText,
+        title,
+        event,
+    }: {
+        aText: string;
+        bText: string;
+        title: string;
+        event?: MouseEvent;
+    }) {
+        const id = registerSnapshotDiff({ aText, bText, title });
+        const state: DiffViewState = {
+            aFile: title,
+            bFile: title,
+            aRef: "",
+            compareSnapshotId: id,
+        };
+        void getNewLeaf(this.plugin.app, event)?.setViewState({
+            type: SPLIT_DIFF_VIEW_CONFIG.type,
+            active: true,
+            state: state,
+        });
     }
 
     async openFileAtCommit(file: string, ref: string): Promise<void> {

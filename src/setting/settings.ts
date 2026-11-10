@@ -159,6 +159,11 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
         if (storedKey === "differentIntervalCommitAndPush") this.update();
         if (storedKey.startsWith("hunks.")) {
             this.plugin.editorIntegration.refreshSignsSettings();
+        } else if (
+            storedKey === "showLocalChanges" ||
+            storedKey === "diffGutterStyle"
+        ) {
+            this.plugin.editorIntegration.refreshLocalChanges();
         } else if (storedKey === "conflictResolutionMode") {
             this.plugin.editorIntegration.refreshConflictSettings();
         } else if (
@@ -620,6 +625,17 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
                                     validate: validateInteger,
                                 },
                             },
+                        ],
+                    },
+                    {
+                        type: "group",
+                        heading: "Editor changes",
+                        items: [
+                            this.toggle(
+                                "Changes since opening a note",
+                                "showLocalChanges",
+                                "IntelliJ style gutter markers and line backgrounds for edits made since the note was opened in this session. Auto commits do not clear them. Colors follow 'Diff line colors'."
+                            ),
                         ],
                     },
                     {

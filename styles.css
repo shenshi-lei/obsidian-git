@@ -1338,3 +1338,108 @@ div:hover > .git-gutter-marker.git-changedelete {
     --git-diff-modified-bg-b: rgba(34, 187, 34, 0.1);
     --git-diff-modified-inline-b: rgba(34, 187, 34, 0.3);
 }
+
+/* ====== IDEA style local change markers in the editor ======
+ * Baseline is the note content when it was opened (session snapshot), so the
+ * markers are not cleared by auto commits. Markers are drawn by
+ * src/editor/localChanges/localChanges.ts.
+ */
+.git-local-style-idea {
+    --git-local-added: #2ea043;
+    --git-local-added-bg: rgba(46, 160, 67, 0.1);
+    --git-local-modified: #3b82f6;
+    --git-local-modified-bg: rgba(59, 130, 246, 0.1);
+    --git-local-deleted: #8b949e;
+}
+
+.git-local-style-github {
+    --git-local-added: #2ea043;
+    --git-local-added-bg: rgba(46, 160, 67, 0.1);
+    --git-local-modified: #ee4433;
+    --git-local-modified-bg: rgba(238, 68, 51, 0.1);
+    --git-local-deleted: #ee4433;
+}
+
+/* Popover with the baseline content of one local change. */
+.cm-tooltip.git-local-tooltip {
+    z-index: var(--layer-popover);
+    max-width: min(560px, 90vw);
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+}
+
+.git-local-tooltip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+}
+
+.git-local-tooltip-title {
+    font-weight: var(--font-semibold);
+    color: var(--text-normal);
+}
+
+.git-local-tooltip-counts {
+    font-family: var(--font-monospace);
+    color: var(--text-faint);
+}
+
+.git-local-tooltip-content {
+    max-height: 280px;
+    overflow: auto;
+    padding: 6px 0;
+    background: var(--background-secondary);
+    font-family: var(--font-monospace);
+    font-size: var(--font-smaller);
+    line-height: 1.5;
+}
+
+.git-local-tooltip-line {
+    padding: 0 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(238, 68, 51, 0.08);
+    color: var(--text-normal);
+}
+
+.git-local-tooltip-empty {
+    padding: 6px 12px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.git-local-tooltip-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.git-local-tooltip-actions button {
+    font-size: var(--font-ui-small);
+    padding: 3px 10px;
+    border-radius: var(--radius-s);
+    border: 1px solid var(--background-modifier-border);
+    background: var(--interactive-normal);
+    color: var(--text-normal);
+    cursor: pointer;
+}
+
+.git-local-tooltip-actions button:hover {
+    background: var(--interactive-hover);
+}
+
+.git-local-tooltip-actions button.git-local-revert {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: transparent;
+}

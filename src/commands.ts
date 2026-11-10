@@ -450,6 +450,40 @@ export function addCommmands(plugin: ObsidianGit) {
     });
 
     plugin.addCommand({
+        id: "toggle-local-changes",
+        name: "Toggle changes since opening a note",
+        callback: async () => {
+            plugin.settings.showLocalChanges =
+                !plugin.settings.showLocalChanges;
+            await plugin.saveSettings();
+            plugin.editorIntegration.refreshLocalChanges();
+        },
+    });
+
+    plugin.addCommand({
+        id: "mark-local-changes-reviewed",
+        name: "Mark changes since opening a note as reviewed",
+        editorCheckCallback(checking) {
+            if (checking) {
+                return plugin.settings.showLocalChanges;
+            }
+            plugin.editorIntegration.localChangesFeature.resetActiveFile();
+            return true;
+        },
+    });
+
+    plugin.addCommand({
+        id: "compare-with-opening-baseline",
+        name: "Compare with note when opened",
+        editorCheckCallback(checking) {
+            if (checking) {
+                return plugin.editorIntegration.localChangesFeature.canCompareActiveFile();
+            }
+            return plugin.editorIntegration.localChangesFeature.compareActiveFile();
+        },
+    });
+
+    plugin.addCommand({
         id: "reset-hunk",
         name: "Reset hunk",
         editorCheckCallback(checking, _, __) {

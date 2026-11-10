@@ -151,7 +151,10 @@ export function rawHunksToHunks(
             for (let i = oldStart; i < oldStart + oldLines; i++) {
                 hunk.removed.lines.push(linesA[i - 1]!);
             }
-            if (oldStart + oldLines > linesA.length && linesA.last() != "") {
+            if (
+                oldStart + oldLines > linesA.length &&
+                linesA[linesA.length - 1] != ""
+            ) {
                 hunk.removed.no_nl_at_eof = true;
             }
         }
@@ -159,7 +162,10 @@ export function rawHunksToHunks(
             for (let i = newStart; i < newStart + newLines; i++) {
                 hunk.added.lines.push(linesB[i - 1]!);
             }
-            if (newStart + newLines > linesB.length && linesB.last() != "") {
+            if (
+                newStart + newLines > linesB.length &&
+                linesB[linesB.length - 1] != ""
+            ) {
                 hunk.added.no_nl_at_eof = true;
             }
         }
