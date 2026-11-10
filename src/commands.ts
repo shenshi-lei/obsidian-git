@@ -4,6 +4,7 @@ import { SimpleGit } from "./gitManager/simpleGit";
 import ObsidianGit from "./main";
 import { openHistoryInGitHub, openLineInGitHub } from "./openInGitHub";
 import { IgnoreModal } from "./ui/modals/ignoreModal";
+import { CommandsModal } from "./ui/commands/commandsModal";
 import { togglePreviewHunk } from "./editor/signs/tooltip";
 
 export function addCommmands(plugin: ObsidianGit) {
@@ -75,6 +76,12 @@ export function addCommmands(plugin: ObsidianGit) {
             // per hotkey even if already opened
             app.workspace.trigger("obsidian-git:refresh");
         },
+    });
+
+    plugin.addCommand({
+        id: "open-command-panel",
+        name: "Open Git command panel",
+        callback: () => new CommandsModal(plugin.app, plugin).open(),
     });
 
     plugin.addCommand({

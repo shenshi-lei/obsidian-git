@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.4](https://github.com/shenshi-lei/obsidian-git/compare/2.43.3...2.43.4) (2026-11-10)
+
+### Features
+
+* open the Git command panel from a header button next to the refresh button
+* show the command panel as a searchable dialog instead of an inline section, with grouped, collapsible commands and tooltips
+
 ## [2.43.3](https://github.com/shenshi-lei/obsidian-git/compare/2.43.2...2.43.3) (2026-11-10)
 
 ### Features

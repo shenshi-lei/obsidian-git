@@ -12,7 +12,7 @@
     import { arrayProxyWithNewLength, getDisplayPath } from "src/utils";
     import { slide } from "svelte/transition";
     import ConflictFileComponent from "./components/conflictFileComponent.svelte";
-    import CommandsSection from "../commands/commandsSection.svelte";
+    import { CommandsModal } from "../commands/commandsModal";
     import FileComponent from "./components/fileComponent.svelte";
     import PulledFileComponent from "./components/pulledFileComponent.svelte";
     import StagedFileComponent from "./components/stagedFileComponent.svelte";
@@ -411,6 +411,10 @@
         view.app.workspace.trigger("obsidian-git:refresh");
     }
 
+    function openCommands(): void {
+        new CommandsModal(plugin.app, plugin).open();
+    }
+
     function runSetupAction(action: () => Promise<unknown>) {
         if (setupInProgress) return;
         setupInProgress = true;
@@ -564,6 +568,14 @@
                 bind:this={buttons[7]}
                 onclick={triggerRefresh}
             ></div>
+            <div
+                id="commands"
+                class="clickable-icon nav-action-button"
+                data-icon="command"
+                aria-label="Git commands"
+                bind:this={buttons[12]}
+                onclick={openCommands}
+            ></div>
             {#if mergeInProgress}
                 <div
                     id="merge-status"
@@ -591,8 +603,6 @@
             ></div>
         {/if}
     </div>
-
-    <CommandsSection {plugin} />
 
     <div class="nav-files-container" style="position: relative;">
         {#if status && status.conflicted.length > 0}
