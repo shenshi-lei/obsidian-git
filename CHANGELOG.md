@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.7](https://github.com/shenshi-lei/obsidian-git/compare/2.43.6...2.43.7) (2026-11-10)
+
+### Bug Fixes
+
+* update the chevron icon when a command group is expanded or collapsed
+* restore padding around the command dialog content so it does not touch the dialog border
+
 ## [2.43.6](https://github.com/shenshi-lei/obsidian-git/compare/2.43.5...2.43.6) (2026-11-10)
 
 ### Bug Fixes

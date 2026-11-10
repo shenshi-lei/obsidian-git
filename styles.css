@@ -1068,7 +1068,7 @@ div:hover > .git-gutter-marker.git-changedelete {
 }
 
 .git-commands-modal {
-    padding: 0;
+    padding: 2px var(--size-4-4) var(--size-4-4);
 }
 
 .git-commands-modal-content {

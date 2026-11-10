@@ -125,12 +125,33 @@
         }
     }
 
-    function tooltip(node: HTMLElement, text: string): void {
+    function tooltip(
+        node: HTMLElement,
+        text: string
+    ): {
+        update: (next: string) => void;
+    } {
         setTooltip(node, text, { placement: "left" });
+        return {
+            update(next: string): void {
+                // Keep the tooltip text current without stacking handlers.
+                node.setAttribute("aria-label", next);
+            },
+        };
     }
 
-    function commandIcon(node: HTMLElement, name: string): void {
+    function commandIcon(
+        node: HTMLElement,
+        name: string
+    ): {
+        update: (next: string) => void;
+    } {
         setIcon(node, name);
+        return {
+            update(next: string): void {
+                setIcon(node, next);
+            },
+        };
     }
 
     onMount(() => {
