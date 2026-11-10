@@ -11,8 +11,6 @@
         "noUncheckedIndexedAccess": true,
         "moduleResolution": "node",
         "isolatedModules": true,
-        "noEmit": true,
-        "allowImportingTsExtensions": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "allowSyntheticDefaultImports": true,
