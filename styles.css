@@ -151,16 +151,20 @@
 }
 
 /* 历史视图：按状态给文件行左侧加一条色条（不占位，用 inset 阴影） */
-.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="A"] {
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="A"] {
     box-shadow: inset 3px 0 0 var(--color-green);
 }
-.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="M"] {
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="M"] {
     box-shadow: inset 3px 0 0 var(--color-blue);
 }
-.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="D"] {
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="D"] {
     box-shadow: inset 3px 0 0 var(--color-red);
 }
-.workspace-leaf-content[data-type="git-history-view"] .nav-file[data-status="R"] {
+.workspace-leaf-content[data-type="git-history-view"]
+    .nav-file[data-status="R"] {
     box-shadow: inset 3px 0 0 var(--color-yellow);
 }
 
@@ -1055,4 +1059,146 @@ div:hover > .git-gutter-marker.git-changedelete {
 
 .is-mobile .git-conflict-actions-widget .nav-action-button {
     flex: 1 1 auto;
+}
+
+/* Command panel inside the source control view */
+.git-commands {
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding: 4px 8px 6px;
+}
+
+.git-commands-header {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.git-commands-title {
+    flex: 1 1 auto;
+    color: var(--text-muted);
+    font-size: var(--font-ui-small);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.git-commands-search {
+    width: 100%;
+    margin: 4px 0;
+    font-size: var(--font-ui-small);
+}
+
+.git-commands-list {
+    max-height: 40vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.git-command-group + .git-command-group {
+    margin-top: 2px;
+}
+
+.git-command-group-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    padding: 2px 4px;
+    border: none;
+    border-radius: var(--radius-s);
+    background: none;
+    box-shadow: none;
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    text-align: left;
+    cursor: pointer;
+}
+
+.git-command-group-header:hover {
+    color: var(--text-normal);
+    background: var(--background-modifier-hover);
+}
+
+.git-command-group-title {
+    font-weight: var(--font-medium);
+}
+
+.git-command-count {
+    margin-left: auto;
+    opacity: 0.6;
+}
+
+.git-command-chevron,
+.git-command-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.git-command-chevron svg,
+.git-command-icon svg {
+    width: var(--icon-xs);
+    height: var(--icon-xs);
+}
+
+.git-command-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.git-command {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 3px 6px;
+    border: none;
+    border-radius: var(--radius-s);
+    background: none;
+    box-shadow: none;
+    color: var(--text-normal);
+    font-size: var(--font-ui-small);
+    text-align: left;
+    cursor: pointer;
+}
+
+.git-command:hover {
+    background: var(--background-modifier-hover);
+}
+
+.git-command.is-disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.git-command.is-disabled:hover {
+    background: none;
+}
+
+.git-command.is-danger {
+    color: var(--text-error);
+}
+
+.git-command-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.is-compact .git-command-items {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.is-compact .git-command {
+    width: auto;
+    padding: 5px;
+}
+
+.git-commands-empty {
+    padding: 6px 4px;
+    color: var(--text-muted);
+    font-size: var(--font-ui-small);
 }

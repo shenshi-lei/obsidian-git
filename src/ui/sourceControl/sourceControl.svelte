@@ -12,6 +12,7 @@
     import { arrayProxyWithNewLength, getDisplayPath } from "src/utils";
     import { slide } from "svelte/transition";
     import ConflictFileComponent from "./components/conflictFileComponent.svelte";
+    import CommandsSection from "../commands/commandsSection.svelte";
     import FileComponent from "./components/fileComponent.svelte";
     import PulledFileComponent from "./components/pulledFileComponent.svelte";
     import StagedFileComponent from "./components/stagedFileComponent.svelte";
@@ -590,6 +591,8 @@
             ></div>
         {/if}
     </div>
+
+    <CommandsSection {plugin} />
 
     <div class="nav-files-container" style="position: relative;">
         {#if status && status.conflicted.length > 0}

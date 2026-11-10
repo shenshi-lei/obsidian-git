@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.43.3](https://github.com/shenshi-lei/obsidian-git/compare/2.43.2...2.43.3) (2026-11-10)
+
+### Features
+
+* command panel in the source control view with grouped, collapsible commands
+* search commands by name, description or group and run them without the command palette
+* tooltips explain every command and why it is disabled; the panel switches to an icon-only layout in narrow sidebars
+
 ## [2.43.2](https://github.com/shenshi-lei/obsidian-git/compare/2.43.0...2.43.2) (2026-11-09)
 
 ### Features
