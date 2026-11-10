@@ -20,6 +20,7 @@ import { GitError } from "simple-git";
 import { Hunks } from "src/editor/signs/hunks";
 import { rawHunkFromChunk, rawHunksToHunks } from "src/editor/signs/diff";
 import { diffContextMenu } from "src/ui/diff/contextMenu";
+import { diffGutter, type DiffSide } from "src/ui/diff/diffGutter";
 
 const readOnlyEditorTheme = EditorView.theme({
     "& .cm-content": { caretColor: "transparent !important" },
@@ -448,6 +449,16 @@ export default class SplitDiffView extends ItemView {
                 // new
 
                 this.contentEl.addClass("git-split-diff-view", "git-diff");
+                const githubColors =
+                    this.plugin.settings.diffGutterStyle === "github";
+                this.contentEl.toggleClass(
+                    "git-diff-colors-github",
+                    githubColors
+                );
+                this.contentEl.toggleClass(
+                    "git-diff-colors-idea",
+                    !githubColors
+                );
                 this.bIsEditable = await this.bShouldBeEditable();
                 this.indexUnmerged = false;
 
@@ -474,7 +485,8 @@ export default class SplitDiffView extends ItemView {
                     }
                 }
 
-                const basicExtensions = [
+                const basicExtensions = (side: DiffSide) => [
+                    diffGutter(side),
                     lineNumbers(),
                     highlightSelectionMatches(),
                     drawSelection(),
@@ -502,13 +514,13 @@ export default class SplitDiffView extends ItemView {
                 const aState = {
                     doc: aText,
                     extensions: [
-                        ...basicExtensions,
+                        ...basicExtensions("a"),
                         EditorState.readOnly.of(true),
                         readOnlyEditorTheme,
                     ],
                 };
 
-                const bExtensions = [...basicExtensions];
+                const bExtensions = [...basicExtensions("b")];
 
                 // Only make the editor modifiable when viewing the working tree version
                 if (!this.bIsEditable) {
@@ -540,6 +552,9 @@ export default class SplitDiffView extends ItemView {
                 this.mergeView = new MergeView({
                     b: bState,
                     a: aState,
+                    // The built-in change gutter only knows "this side changed",
+                    // so the IDEA style gutter at the far left replaces it.
+                    gutter: false,
                     collapseUnchanged: {
                         minSize: 6,
                         margin: 4,
@@ -556,6 +571,11 @@ export default class SplitDiffView extends ItemView {
                     },
                     parent: container,
                 });
+
+                // The IDEA gutter pairs lines of both documents, so the first
+                // editor cannot draw its markers until the second one exists.
+                this.mergeView.a.dispatch({});
+                this.mergeView.b.dispatch({});
             } finally {
                 this.refreshing = false;
             }

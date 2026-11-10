@@ -1302,3 +1302,39 @@ div:hover > .git-gutter-marker.git-changedelete {
     color: var(--text-muted);
     font-size: var(--font-ui-small);
 }
+
+/* ====== IDEA style diff gutter and line colors ======
+ * Markers are drawn by src/ui/diff/diffGutter.ts. The palette lives here so
+ * it can be tuned with a CSS snippet, and the GitHub palette swaps in red
+ * deletions through the `git-diff-colors-github` class.
+ */
+.git-split-diff-view {
+    --git-diff-added-color: #2ea043;
+    --git-diff-added-bg: rgba(46, 160, 67, 0.1);
+    --git-diff-added-inline: rgba(46, 160, 67, 0.3);
+
+    --git-diff-deleted-color: #8b949e;
+    --git-diff-deleted-bg: rgba(139, 148, 158, 0.12);
+    --git-diff-deleted-inline: rgba(139, 148, 158, 0.35);
+
+    --git-diff-modified-color-a: #3b82f6;
+    --git-diff-modified-color-b: #3b82f6;
+    --git-diff-modified-bg-a: rgba(59, 130, 246, 0.1);
+    --git-diff-modified-bg-b: rgba(59, 130, 246, 0.1);
+    --git-diff-modified-inline-a: rgba(59, 130, 246, 0.3);
+    --git-diff-modified-inline-b: rgba(59, 130, 246, 0.3);
+}
+
+.git-split-diff-view.git-diff-colors-github {
+    --git-diff-deleted-color: #ee4433;
+    --git-diff-deleted-bg: rgba(238, 68, 51, 0.1);
+    --git-diff-deleted-inline: rgba(238, 68, 51, 0.3);
+
+    --git-diff-modified-color-a: #ee4433;
+    --git-diff-modified-bg-a: rgba(238, 68, 51, 0.1);
+    --git-diff-modified-inline-a: rgba(238, 68, 51, 0.3);
+
+    --git-diff-modified-color-b: #22bb22;
+    --git-diff-modified-bg-b: rgba(34, 187, 34, 0.1);
+    --git-diff-modified-inline-b: rgba(34, 187, 34, 0.3);
+}

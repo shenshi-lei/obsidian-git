@@ -99,6 +99,11 @@ export interface ObsidianGitSettings {
     dateInHistoryView: boolean;
     diffStyle: "git_unified" | "split";
     /**
+     * Palette used by the gutter markers and line backgrounds of the split
+     * diff view: IntelliJ IDEA (green/blue/gray) or GitHub (green/red).
+     */
+    diffGutterStyle: "idea" | "github";
+    /**
      * Time in milliseconds available to compute an editable split diff.
      * Read-only split diffs use ten times this value.
      */

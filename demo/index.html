@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>obsidian-git · IDEA 风格差异提示原型</title>
+        <link rel="stylesheet" href="../styles.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <div class="demo-page">
+            <header>
+                <h1>obsidian-git 拆分对比视图 · IDEA 风格行级提示</h1>
+                <p>
+                    左侧为旧版本，右侧为新版本。行首色条与整行底色由
+                    <code>src/ui/diff/diffGutter.ts</code> 绘制，配色来自
+                    <code>styles.css</code> 中的 CSS 变量。
+                </p>
+            </header>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="dot idea"></span>
+                    <h2>IntelliJ IDEA 配色</h2>
+                    <p>新增 = 绿 · 修改 = 蓝 · 删除 = 灰</p>
+                </div>
+                <div
+                    id="idea"
+                    class="demo-diff git-split-diff-view git-diff-colors-idea"
+                ></div>
+            </section>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="dot github"></span>
+                    <h2>GitHub 配色</h2>
+                    <p>新增 = 绿 · 删除 = 红 · 修改行 = 左红右绿</p>
+                </div>
+                <div
+                    id="github"
+                    class="demo-diff git-split-diff-view git-diff-colors-github"
+                ></div>
+            </section>
+        </div>
+        <script src="demo.js"></script>
+    </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>obsidian-git · 拆分对比视图改版前后</title>
+        <link rel="stylesheet" href="../styles.css" />
+        <link rel="stylesheet" href="compare.css" />
+    </head>
+    <body>
+        <div class="demo-page">
+            <header>
+                <h1>obsidian-git 拆分对比视图：改版前后对比</h1>
+                <p>
+                    同一份笔记内容、同一个 CodeMirror 版本、同一份
+                    <code>styles.css</code>；「修改前」按原版插件配置重建
+                    （MergeView 默认单侧色条，不区分新增 / 修改 / 删除）。
+                </p>
+            </header>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="badge legacy">修改前</span>
+                    <h2>原版 Split diff</h2>
+                    <p>每侧只有一种色条 + 整块淡底色</p>
+                </div>
+                <div id="legacy" class="demo-diff git-split-diff-view"></div>
+            </section>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="badge now">修改后</span>
+                    <h2>IDEA 风格 · 逐行标记</h2>
+                    <p>新增 = 绿 · 修改 = 蓝 · 删除 = 灰（默认）</p>
+                </div>
+                <div
+                    id="idea"
+                    class="demo-diff git-split-diff-view git-diff-colors-idea"
+                ></div>
+            </section>
+
+            <section class="demo-card">
+                <div class="demo-card-head">
+                    <span class="badge now">修改后</span>
+                    <h2>GitHub 配色</h2>
+                    <p>新增 = 绿 · 删除 = 红 · 修改行左红右绿</p>
+                </div>
+                <div
+                    id="github"
+                    class="demo-diff git-split-diff-view git-diff-colors-github"
+                ></div>
+            </section>
+        </div>
+        <script src="compare.js"></script>
+    </body>
+</html>

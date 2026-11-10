@@ -597,6 +597,18 @@ export class ObsidianGitSettingsTab extends PluginSettingTab {
                                 visible: desktop,
                             },
                             {
+                                ...this.dropdown(
+                                    "Diff line colors",
+                                    "diffGutterStyle",
+                                    {
+                                        idea: "IntelliJ IDEA (green / blue / gray)",
+                                        github: "GitHub (green / red)",
+                                    },
+                                    "Colors of the changed line markers and backgrounds in the split diff view."
+                                ),
+                                visible: desktop,
+                            },
+                            {
                                 name: "Split diff computation time limit (ms)",
                                 desc: "Maximum milliseconds to compute a detailed split diff. Read-only diffs use ten times this value.",
                                 visible: desktop,
